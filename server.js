@@ -20,7 +20,13 @@ app.get('/api/notes', (req, res) => {
     res.json(notes);
   });
 // post /api/notes should receive a new note to save on the request body, add it to the db.json file, and then return the new note to the client. You'll need to find a way to give each note a unique id when it's saved. Look for npm packages that do this
-
+app.post('/api/notes', (req, res) => {
+    // Log that a POST request was received
+  console.info(`${req.method} request received to add a note`);
+    //req.body is the stringified note
+    console.log(req.body)
+//const {} = req.body
+})
 //get * returns index.html
 app.get('*', (req, res) => 
     res.sendFile(path.join(__dirname, '/public/index.html'))
