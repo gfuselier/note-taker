@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
-const notes = require('./db/db.json');
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+let notes = require('./db/db.json');
 
 const PORT = process.env.PORT || 3001;
 
@@ -25,7 +27,31 @@ app.post('/api/notes', (req, res) => {
   console.info(`${req.method} request received to add a note`);
     //req.body is the stringified note
     console.log(req.body)
-//const {} = req.body
+    const {title, text} = req.body
+    const newNote = {
+      title,
+      text,
+      id: uuidv4(),
+    }
+    console.log(newNote)
+
+    notes.push(newNote)
+    fs.writeFile('./db/db.json', JSON.stringify(notes),
+    (err) => {
+      if(err) {console.log(err)}
+      else {return res.json(notes)}
+    })
+})
+
+app.delete('/api/notes/:id', (req, res) => {
+  console.log(req.params.id)
+  notes = notes.filter((note) => note.id !== req.params.id)
+  console.log(notes)
+  fs.writeFile('./db/db.json', JSON.stringify(notes),
+    (err) => {
+      if(err) {console.log(err)}
+      else {return res.json(notes)}
+    })
 })
 //get * returns index.html
 app.get('*', (req, res) => 
